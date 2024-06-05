@@ -10,7 +10,7 @@ const Ceo = () => {
 
   // JS 자리
   const [searchParams, setSearchParams] = useSearchParams();
-  // company/ceo?name=박민경&age=30
+  // company/ceo?name=홍길동&age=30
   const name = searchParams.get("name");
   const age = searchParams.get("age");
 

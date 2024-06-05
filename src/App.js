@@ -22,7 +22,8 @@ function App() {
     { name: "LG전자", link: "http://" },
     { name: "그린컴퓨터", link: "http://" },
   ];
-  const [isLogin, setIsLogin] = useState(false);
+  // 로그인 안된 경우
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <BrowserRouter>
@@ -30,7 +31,7 @@ function App() {
       <div className="wrap">
         <Header>
           {isLogin ? (
-            <div>회원수정/로그아웃</div>
+            <div>정보수정/로그아웃</div>
           ) : (
             <div>회원가입/회원로그인</div>
           )}
@@ -64,6 +65,7 @@ function App() {
             <Route path="delete/:id" element={<h1>제품 삭제</h1>}></Route>
             <Route path="modify/:id" element={<h1>제품 수정</h1>}></Route>
           </Route>
+
           <Route path="/schedule" element={<Schedule />}></Route>
 
           {/* 잘못된 경로 */}
