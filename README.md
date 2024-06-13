@@ -370,7 +370,6 @@ const postUser = async data => {
 
 - /src/axios/user 폴더 생성
 - /src/axios/user/apiuser.js 파일 생성
-- src/apis/user/apiuser.js
 
 ```js
 import axios from "axios";
@@ -383,7 +382,7 @@ export const postUser = async data => {
     console.log(response.data);
     // 나머지는 리액트에서 처리
     if (response.data.statusCode === "2") {
-      alert("회원가입 성공");
+      return "회원가입 성공";
     } else {
       return response.data;
     }
@@ -428,14 +427,11 @@ export const postSignIn = async ({ userId, userPass }) => {
 
 ## 4. 회원로그인
 
-- pages/member/Login.js
-
 ```js
-import { useEffect, useState } from "react";
-import "../../css/member.css";
-import axios from "axios";
-import { postSignIn } from "../../apis/user/apiuser";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { postSignIn } from "../../apis/user/apiuser";
+import "../../css/member.css";
 const Login = () => {
   // 라우터
   const navigate = useNavigate();
@@ -447,11 +443,21 @@ const Login = () => {
     // 새로 고침 막기
     e.preventDefault();
 
+    if (userId === "") {
+      alert("아이디를 입력하세요");
+      return;
+    }
+    if (userPass === "") {
+      alert("패스워드를 입력하세요");
+      return;
+    }
+
     const result = await postSignIn({ userId, userPass });
     if (result.statusCode !== 2) {
       alert(result.resultMsg);
       return;
     }
+
     navigate("/");
   };
 
@@ -508,4 +514,387 @@ const Login = () => {
 export default Login;
 ```
 
-## 5. 회원정보수정
+## 5. 모달창 적용해 보기
+
+- /src/components/modal/Modal.js
+
+```js
+import "./modal.css";
+const Modal = ({
+  title,
+  text,
+  modalOk,
+  modalCancel,
+  modalBtOk,
+  modalBtCancel,
+}) => {
+  return (
+    <div className="modal-wrap">
+      <div className="modal-content">
+        <header>
+          <h1>{title}</h1>
+        </header>
+        <main>
+          <p>{text}</p>
+        </main>
+        <footer>
+          {modalBtOk ? (
+            <button
+              onClick={() => {
+                modalOk();
+              }}
+            >
+              확인
+            </button>
+          ) : null}
+
+          {modalBtCancel ? (
+            <button
+              onClick={() => {
+                modalCancel();
+              }}
+            >
+              취소
+            </button>
+          ) : null}
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default Modal;
+```
+
+- /src/components/modal/modal.css
+
+```css
+.modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 99999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  min-height: 400px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.modal-content header {
+  text-align: center;
+}
+.modal-content main {
+  text-align: center;
+}
+.modal-content footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+}
+```
+
+- /src/pages/member/Login.js
+
+```js
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postSignIn } from "../../apis/user/apiuser";
+import "../../css/member.css";
+import Modal from "../../components/modal/Modal";
+const Login = () => {
+  // 라우터
+  const navigate = useNavigate();
+  // 모달창 전달 변수
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalText, setModalText] = useState("");
+  // 컴포넌트 버튼 보이고, 숨기기 ( children, 새로 컴포넌트도 고민)
+  const [modalBtOk, setModalBtOk] = useState(true);
+  const [modalBtCancel, setModalBtCancel] = useState(true);
+  // 모달 보이는 상태값
+  const [isModal, setIsModal] = useState(false);
+  // 모달 실행 함수
+  const modalOk = () => {
+    setIsModal(false);
+
+    if (isSuccess) {
+      navigate("/");
+    }
+  };
+  const modalCancel = () => {
+    setIsModal(false);
+  };
+
+  const [userId, setUserId] = useState("hong14Guild");
+  const [userPass, setUserPass] = useState("Abc@1234");
+  // 로그인 성공 여부
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async e => {
+    // 새로 고침 막기
+    e.preventDefault();
+    // 아이디가 입력이 되었는지 확인
+    if (!userId) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText("아이디를 반드시 입력해주세요.");
+      setModalBtOk(true);
+      setModalBtCancel(true);
+      return;
+    }
+    if (!userPass) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText("비밀번호를 반드시 입력해주세요.");
+      setModalBtOk(true);
+      setModalBtCancel(true);
+      return;
+    }
+
+    const result = await postSignIn({ userId, userPass });
+    if (result.statusCode !== 2) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText(result.resultMsg);
+      setModalBtOk(true);
+      setModalBtCancel(false);
+      return;
+    }
+    // 성공함
+    setIsModal(true);
+    setModalTitle("로그인 안내");
+    setModalText("로그인에 성공하였습니다.");
+    setModalBtOk(true);
+    setModalBtCancel(false);
+
+    // 로그인 성공
+    setIsSuccess(true);
+    // navigate("/");
+  };
+
+  return (
+    <>
+      {isModal ? (
+        <Modal
+          title={modalTitle}
+          text={modalText}
+          modalOk={modalOk}
+          modalCancel={modalCancel}
+          modalBtOk={modalBtOk}
+          modalBtCancel={modalBtCancel}
+        />
+      ) : null}
+
+      <div className="join-wrap">
+        <form className="join-form">
+          {/* 사용자 아이디 */}
+          <div className="form-group">
+            <label htmlFor="userid">아이디</label>
+            <input
+              type="text"
+              value={userId}
+              id="userid"
+              className="join-email"
+              onChange={e => {
+                setUserId(e.target.value);
+              }}
+            />
+          </div>
+
+          {/* 사용자 패스워드 */}
+          <div className="form-group">
+            <label htmlFor="pass">패스워드</label>
+            <input
+              type="password"
+              value={userPass}
+              id="pass"
+              className="join-email"
+              onChange={e => {
+                setUserPass(e.target.value);
+              }}
+            />
+          </div>
+
+          <div className="form-group">
+            <button
+              type="submit"
+              className="bt-submit"
+              onClick={e => {
+                handleSubmit(e);
+              }}
+            >
+              로그인
+            </button>
+            <button type="reset" className="bt-cancel">
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default Login;
+```
+
+## 6. localStorage 에 정보 저장
+
+- 웹브라우저에 영원히 보관됩니다.
+- 누구나 f12 으로 확인가능합니다.
+- 위험한 장소
+- `localStorage.setItem("키명", 값)`
+- `localStorage.getItem("키명")`
+- `localStorage.removeItem("키명")`
+- `localStorage.clear()`
+- 새로고침한 경우에 정보를 useState 에 담는다.
+- 각 컴포넌트에 props 를 통해 정보를 전달한다.
+- 이러한 props 가 전달되는 과정을 Drilling 이라고합니다.
+- 컴포넌트 드릴링은 많은 부작용이 있다.
+- props 는 3단계 이상 연속으로 전달하지 않도록 노력하자.
+- 3단계 이상 넘어간다면 전역상태관리를 권장한다.
+
+### 6.1. Context API 와 localStorage 활용
+
+- 어느 컴포넌트에서 전역관리 코드를 해줄까?
+  : App.js 를 추천함.
+- react 라이브러리에 내장되어 있다.
+- step 1.
+  : Context 를 생성한다. createContext()
+  : `export const userInfoContext = createContext();`
+- step 2. Provider 생성 및 value 지정
+
+```js
+const [isUser, setIsUser] = useState("");
+....
+<userInfoContext.Provider
+  value={{ isUser, setIsUser }}
+>
+  컴포넌트 배치
+</userInfoContext.Provider>;
+```
+
+- step 3. Context 를 사용. useContext()
+  : `const { isUser, setIsUser } = useContext(userInfoContext);`
+
+## 7. sessionStorage 에 정보 저장
+
+- 웹브라우저에 임시 보관됩니다.
+- 누구나 f12 으로 확인가능합니다.
+- 위험한 장소이지만 그래도 휘발성이다
+- `sessionStorage.setItem("키명", 값)`
+- `sessionStorage.getItem("키명")`
+- `sessionStorage.removeItem("키명")`
+- `sessionStorage.clear()`
+
+## 8. cookie 에 정보 저장
+
+- https://www.npmjs.com/package/react-cookie
+- `npm i react-cookie`
+- https://velog.io/@defaultkyle/react-cookie
+- /src/utils/cookie.js
+
+```js
+import { Cookies } from "react-cookie";
+
+const cookies = new Cookies();
+
+export const setCookie = (name, value, options) => {
+  return cookies.set(name, value, { ...options });
+};
+
+export const getCookie = name => {
+  return cookies.get(name);
+};
+```
+
+### 8.1. 쿠키 설정 옵션
+
+- setCookie 메서드에 전달할 수 있는 주요 옵션들은 다음과 같습니다:
+- path: 쿠키의 경로를 설정합니다. 기본값은 '/'입니다.
+- expires: 쿠키의 만료 날짜를 설정합니다. Date 객체를 사용합니다.
+- maxAge: 쿠키의 수명을 초 단위로 설정합니다.
+- domain: 쿠키가 유효한 도메인을 설정합니다.
+- secure: true로 설정하면 HTTPS에서만 쿠키가 전송됩니다.
+- httpOnly: true로 설정하면 클라이언트에서 쿠키를 사용할 수 없습니다 (서버 측에서만 접근 가능).
+- sameSite: 쿠키의 SameSite 속성을 설정합니다. 'strict', 'lax', 'none' 중 하나를 사용합니다.
+
+```js
+setCookie("userid", userId, {
+  path: "/",
+  expire: new Date(Date.now() + 86400e3), // 1일 후 만료시간 설정
+  maxAge: 86400, // 1일 동안 유효
+});
+```
+
+### 8.2. 쿠키 설정 및 axios, JTW 연동
+
+```js
+import axios from "axios";
+// 쿠키관련
+import { Cookies } from "react-cookie";
+const cookies = new Cookies();
+
+export const client = axios.create({
+  baseURL: "API 주소", // 선택사항 1. 기본 URL 설정
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request 처리
+client.interceptors.request.use(
+  config => {
+    // 로컬스토리지를 활용한 경우
+    // const user = JSON.parse(localStorage.getItem("user") || "");
+    // if (user?.token) {
+    //     config.headers.Authorization = `Bearer ${user.token}`;
+    //   }
+
+    // 쿠키를 활용하는 경우
+    const token = cookies.get("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => console.log(error),
+);
+
+// 쿠키 set 하기
+export const fetchLogin = async (id, pass) => {
+  try {
+    const res = await client.post("/login", { id, pass });
+    // res.data ======== >>>>> {token:"토큰문자열", .....}
+    const result = await res.data;
+    cookies.set("token", result.token, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+      httpOnly: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+// logout 시 쿠키 지우기
+export const fetchLogout = () => {
+  cookies.remove("token");
+};
+```
+
+## 9. Context API 로 각 컴포넌트에서 정보 출력 및 수정
+
+## 10. 회원정보수정

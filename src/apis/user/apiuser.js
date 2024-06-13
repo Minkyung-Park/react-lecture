@@ -8,7 +8,7 @@ export const postUser = async data => {
     console.log(response.data);
     // 나머지는 리액트에서 처리
     if (response.data.statusCode === "2") {
-      alert("회원가입 성공");
+      return "회원가입 성공";
     } else {
       return response.data;
     }
