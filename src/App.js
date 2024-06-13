@@ -1,23 +1,24 @@
-import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import { createContext, useEffect, useState } from "react";
 
 // Index 라는 이름 충돌로 변경함
-import { UserInfoProvider } from "./context/UserInfoProvider";
 import Home from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Schedule from "./pages/Schedule";
+import Compony from "./pages/company/Index";
+import GoodDeatil from "./pages/good/Detail";
 import Ceo from "./pages/company/Ceo";
 import History from "./pages/company/History";
-import Compony from "./pages/company/Index";
 import Partner from "./pages/company/Partner";
-import GoodDeatil from "./pages/good/Detail";
 import Good from "./pages/good/Good";
+import Schedule from "./pages/Schedule";
+import NotFound from "./pages/NotFound";
 import Join from "./pages/member/Join";
 import Login from "./pages/member/Login";
+import { UserInfoProvider } from "./context/UserInfoProvider";
 import File from "./pages/File";
+import AnimalAdd from "./pages/AnimalAdd";
 
 function App() {
   // 복잡한 데이터
@@ -75,6 +76,7 @@ function App() {
             <Route path="/join" element={<Join />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/file" element={<File />}></Route>
+            <Route path="/animaladd" element={<AnimalAdd />}></Route>
 
             {/* 잘못된 경로 */}
             <Route path="*" element={<NotFound />}></Route>

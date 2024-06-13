@@ -92,7 +92,15 @@ const Header = ({ children }) => {
             to="/file"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            파일 업로드
+            파일업로드
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/animaladd"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            애완동물 등록하기
           </NavLink>
         </li>
 
@@ -102,8 +110,8 @@ const Header = ({ children }) => {
             <li>
               <button
                 onClick={() => {
-                  // localStorage 아이템 삭제
-                  // localStorage.removeItem("userid");
+                  // sessionStorage 아이템 삭제
+                  // sessionStorage.removeItem("userid");
                   // sessionStorage.setItem("userid", "");
                   setCookie("userid", "", {});
                   // useState 업데이트
