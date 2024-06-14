@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { getCookie } from "../utils/cookie";
 export const userInfoContext = createContext();
 export const UserInfoProvider = ({ children }) => {
@@ -11,6 +11,7 @@ export const UserInfoProvider = ({ children }) => {
     // const tempUser = localStorage.getItem("userid");
     // const tempUser = sessionStorage.getItem("userid");
     const tempUser = getCookie("userid");
+    console.log("tempUser : ", tempUser);
 
     if (tempUser !== null || tempUser !== "") {
       setIsUser(tempUser);

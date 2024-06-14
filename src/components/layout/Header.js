@@ -103,6 +103,14 @@ const Header = ({ children }) => {
             애완동물 등록하기
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/multifile"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            멀티파일 등록하기
+          </NavLink>
+        </li>
 
         {isUser ? (
           <>
