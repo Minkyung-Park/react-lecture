@@ -19,7 +19,7 @@ import Login from "./pages/member/Login";
 import { UserInfoProvider } from "./context/UserInfoProvider";
 import File from "./pages/File";
 import AnimalAdd from "./pages/AnimalAdd";
-import MultiFile from "./pages/MultiFile";
+import MulitiFile from "./pages/MultiFile";
 
 function App() {
   // 복잡한 데이터
@@ -78,7 +78,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/file" element={<File />}></Route>
             <Route path="/animaladd" element={<AnimalAdd />}></Route>
-            <Route path="/multifile" element={<MultiFile />}></Route>
+            <Route path="/mulitifile" element={<MulitiFile />}></Route>
 
             {/* 잘못된 경로 */}
             <Route path="*" element={<NotFound />}></Route>

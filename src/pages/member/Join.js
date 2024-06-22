@@ -7,7 +7,7 @@ const Join = () => {
   const navigate = useNavigate();
 
   // 입력할 항목 변수
-  const [userId, setUserId] = useState("beyonce27");
+  const [userId, setUserId] = useState("hong14Guild");
   const [userEmail, setUserEmail] = useState("");
   const [userPass, setUserPass] = useState("Abc@1234");
   const [userPass2, setUserPass2] = useState("");
@@ -15,7 +15,6 @@ const Join = () => {
 
   // 회원가입시 처리할 함수
   const joinMember = async event => {
-    // async : 기다렸다가
     // form 태그에서 submit 을 하면 웹브라우저 갱신
     // 갱신하면 초기화 되므로 막아줌. (기본기능막기)
     event.preventDefault();
@@ -27,14 +26,14 @@ const Join = () => {
       name: userName,
       email: userEmail,
     };
-    const result = await postUser(requestData); // try catch안써서 나쁜 구문
+    const result = await postUser(requestData);
     console.log(result);
     if (result.statusCode !== 2) {
       alert(result.resultMsg);
       return;
     }
-    // 회원가입이 성공했으므로 /login으로 이동한다
-    // path로 강제 이동시키기
+    // 회원가입이 성공했으므로 /login 으로 이동한다.
+    // path 로 강제 이동시키기
     navigate("/login");
   };
 

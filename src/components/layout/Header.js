@@ -105,7 +105,7 @@ const Header = ({ children }) => {
         </li>
         <li>
           <NavLink
-            to="/multifile"
+            to="/mulitifile"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
             멀티파일 등록하기

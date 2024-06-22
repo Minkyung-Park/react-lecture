@@ -25,7 +25,7 @@ const Login = () => {
     if (isSuccess) {
       // console.log(userId);
       // console.log(userPass);
-      // localStorage 에 저장하기
+      // localStorage.setItem("userid", userId);
       // sessionStorage.setItem("userid", userId);
       setCookie("userid", userId, {
         path: "/",
@@ -41,7 +41,7 @@ const Login = () => {
     setIsModal(false);
   };
 
-  const [userId, setUserId] = useState("beyonce27");
+  const [userId, setUserId] = useState("hong14Guild");
   const [userPass, setUserPass] = useState("Abc@1234");
   // 로그인 성공 여부
   const [isSuccess, setIsSuccess] = useState(false);
