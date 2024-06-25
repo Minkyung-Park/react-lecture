@@ -83,7 +83,7 @@ useEffect(() => {
 const changeLogin = () => {
   // setLogin(!login);
   // useState 는 비동기 방식으로 처리된다.
-  // 업데이트 함수 활용
+  // 업데이트 함수 활용g
   setCount(prev => prev + 1);
   setCount(prev => prev + 1);
   setCount(prev => prev + 1);
